@@ -255,13 +255,6 @@ module.exports = (api, options) => {
 
   const chainWebPack = platform => {
     api.chainWebpack(webpackConfig => {
-      // add cordova.js to index.html
-      webpackConfig.plugin('cordova')
-        .use(require('html-webpack-tags-plugin'), [{
-          tags: ['cordova.js'],
-          append: false,
-        }])
-
       // process.env.CORDOVA_PLATFORM = platform
       if (platform !== null) {
         webpackConfig.plugin('define')
