@@ -1,6 +1,7 @@
 const spawn = require('cross-spawn')
 const { info, error } = require('@vue/cli-shared-utils')
 const fs = require('fs')
+const path = require('path')
 const portfinder = require('portfinder')
 const address = require('address')
 const defaults = require('./defaults')
