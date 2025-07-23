@@ -132,10 +132,19 @@ module.exports = (api, options) => {
   const cordovaJSMiddleware = platform => {
     return (req, res, next) => {
       if (req.url !== '/') {
-        const filePath = getPlatformPathWWW(platform) + req.url
-        try {
+
+        // Sanitize the URL to prevent path traversal
+        const sanitizedUrl = path.normalize(req.url).replace(/^(\.\.[\/\\])+/, '')
+        const platformWWWPath = getPlatformPathWWW(platform)
+        const filePath = path.join(platformWWWPath, sanitizedUrl)
+        
+        // Ensure the resolved path is within the expected directory
+        if (!filePath.startsWith(platformWWWPath)) {
+          return next()
+        }        try {
           if (fs.existsSync(filePath)) {
             const fileContent = fs.readFileSync(filePath, 'utf-8')
+            res.setHeader('Content-Type', 'application/javascript')
             res.send(fileContent)
             return
           }
